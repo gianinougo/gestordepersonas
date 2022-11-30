@@ -10,19 +10,25 @@ public class Funcionario extends Persona{
 	
 	
 	String cargo;
+	String codigoCuerpo;
 	String departamento;
-	LocalDate fechaIngreso;
-	
+	int diaIngreso;
+	int mesIngreso;
+	int anyoIngreso;
 	
 
 
 	public Funcionario(String nombre, String apellido, String direccion, int telefono, int dia, int mes, int anyo,
-			String cargo, String departamento, LocalDate fechaIngreso) {
+			String cargo, String codigoCuerpo, String departamento, int diaIngreso, int mesIngreso, int anyoIngreso) {
 		super(nombre, apellido, direccion, telefono, dia, mes, anyo);
 		this.cargo = cargo;
+		this.codigoCuerpo = codigoCuerpo;
 		this.departamento = departamento;
-		this.fechaIngreso = fechaIngreso;
+		this.diaIngreso = diaIngreso;
+		this.mesIngreso = mesIngreso;
+		this.anyoIngreso = anyoIngreso;
 	}
+
 
 
 	public String getCargo() {
@@ -45,21 +51,60 @@ public class Funcionario extends Persona{
 	}
 
 
-	public LocalDate getFechaIngreso() {
-		return fechaIngreso;
+	public int getDiaIngreso() {
+		return diaIngreso;
 	}
 
 
-	public void setFechaIngreso(LocalDate fechaIngreso) {
-		this.fechaIngreso = fechaIngreso;
+	public void setDiaIngreso(int diaIngreso) {
+		this.diaIngreso = diaIngreso;
+	}
+
+
+	public int getMesIngreso() {
+		return mesIngreso;
+	}
+
+
+	public void setMesIngreso(int mesIngreso) {
+		this.mesIngreso = mesIngreso;
+	}
+
+
+	public int getAnyoIngreso() {
+		return anyoIngreso;
+	}
+
+
+	public void setAnyoIngreso(int anyoIngreso) {
+		this.anyoIngreso = anyoIngreso;
+	}
+
+
+	public String getCodigoCuerpo() {
+		return codigoCuerpo;
+	}
+
+
+	public void setCodigoCuerpo(String codigoCuerpo) {
+		this.codigoCuerpo = codigoCuerpo;
 	}
 
 
 	@Override
 	public String toString() {
-		return "Funcionario [cargo=" + cargo + ", departamento=" + departamento + ", fechaIngreso=" + fechaIngreso
-				+ "]";
+		return "Funcionario [cargo=" + cargo + ", codigoCuerpo=" + codigoCuerpo + ", departamento=" + departamento
+				+ ", diaIngreso=" + diaIngreso + ", mesIngreso=" + mesIngreso + ", anyoIngreso=" + anyoIngreso + "]";
 	}
+
+	
+	
+	
+	
+
+
+
+	
 	
 	
 	

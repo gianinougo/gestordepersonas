@@ -142,26 +142,210 @@ public class MenuApp {
 	private static void addFuncionario(ManejadorBaseDatos manejador) 
 		throws ClassNotFoundException, SQLException, ParseException 
 	{
-		menuFuncionario();
+		List<Funcionario> funcionarios = menuFuncionario();
+		
+		for (Funcionario f : funcionarios) {
+			String sqlInsert = "insert into funcionarios " +
+					"(nombres, apellidos, direccion, telefono, fecha_nacim, " +
+					"cargo, departamento, fecha_ingreso) values ('" +
+					f.getNombre() + "', '" +
+					f.getApellido() + "', '" + f.getDireccion() + "', " + 
+					f.getTelefono() + ", date('" +
+					f.getAnyo() + "-" + f.getMes() + "-" +
+					f.getDia() + "'), ('" + f.getCargo() + "', '" +
+					f.getCodigoCuerpo() + "'), '" + f.getDepartamento() +
+					"', date('" + f.getAnyoIngreso() + "-" + f.getMesIngreso() +
+					"-" + f.getDiaIngreso() + "'));";
+					
+			manejador.update(sqlInsert);
+		}
 	}
 	
 	private static void modifyPersona(ManejadorBaseDatos manejador) 
-		throws ClassNotFoundException, SQLException 
-	{
-
-	}
+			throws ClassNotFoundException, SQLException 
+		{
+			System.out.print("Introduce el número de la persona a modificar: ");
+			int numero = sc.nextInt();
+			sc.nextLine();
+			
+			String sqlSelect = "select * from only personas where numero = " +
+					numero;
+			
+			ResultSet rs = manejador.select(sqlSelect);
+			
+			if(rs.isBeforeFirst())
+			{
+				while(rs.next())
+				{
+					LocalDate nacim = rs.getDate("fecha_nacim").toLocalDate();
+					
+					System.out.println("Datos antiguos");
+					System.out.println("Nombre: " + rs.getString("nombres"));
+					System.out.println("Apellidos: " + rs.getString("apellidos"));
+					System.out.println("Dirección: " + rs.getString("direccion"));
+					System.out.println("Teléfono: " + rs.getInt("telefono"));
+					System.out.println("Fecha de nacimiento: " + 
+							nacim.getDayOfMonth() + "/" + nacim.getMonthValue() +
+							"/" + nacim.getYear());
+					
+					System.out.println();
+					System.out.println("Nuevos datos (enter para conservar el dato antiguo)");
+					
+					String sqlModify = "update personas set ";
+					
+					String aux = modifyPersonaAux();
+					
+					if(aux.length() > 0)
+					{
+						sqlModify += aux;
+						sqlModify += " where numero = " + numero + ";";
+						manejador.update(sqlModify);
+					}
+				}
+			}
+			else
+			{
+				System.out.println("El usuario no existe");
+			}
+		}
 	
 	private static void modifyCliente(ManejadorBaseDatos manejador) 
-		throws ClassNotFoundException, SQLException 
-	{
-
-	}
+			throws ClassNotFoundException, SQLException 
+		{
+			System.out.print("Introduce el número del cliente a modificar: ");
+			int numero = sc.nextInt();
+			sc.nextLine();
+			
+			String sqlSelect = "select * from clientes where numero = " +
+					numero;
+			
+			ResultSet rs = manejador.select(sqlSelect);
+			
+			if(rs.isBeforeFirst())
+			{
+				while(rs.next())
+				{
+					LocalDate nacim = rs.getDate("fecha_nacim").toLocalDate();
+					
+					System.out.println("Datos antiguos");
+					System.out.println("Nombre: " + rs.getString("nombres"));
+					System.out.println("Apellidos: " + rs.getString("apellidos"));
+					System.out.println("Dirección: " + rs.getString("direccion"));
+					System.out.println("Teléfono: " + rs.getInt("telefono"));
+					System.out.println("Fecha de nacimiento: " + 
+							nacim.getDayOfMonth() + "/" + nacim.getMonthValue() +
+							"/" + nacim.getYear());
+					System.out.println("Número de cuenta: " +
+							rs.getString("nro_cuenta"));
+					System.out.println("Estado: " + rs.getString("estado"));
+					System.out.println("Tipo de cliente: " +
+							rs.getString("tipo_cliente"));
+					
+					System.out.println();
+					System.out.println(
+							"Nuevos datos (enter para conservar el dato antiguo)");
+					
+					String sqlModify = "update clientes set ";
+					
+					String aux = modifyPersonaAux();
+					String aux2 = modifyClienteAux();
+					
+					if(aux.length() > 0)
+					{
+						sqlModify += aux;
+						if(aux2.length() > 0)
+						{
+							sqlModify += ", " + aux2;
+						}
+						sqlModify += " where numero = " + numero + ";";
+						manejador.update(sqlModify);
+					}
+					else
+					{
+						if(aux2.length() > 0)
+						{
+							sqlModify += aux2;
+							sqlModify += " where numero = " + numero + ";";
+							manejador.update(sqlModify);
+						}
+					}
+				}
+			}
+			else
+			{
+				System.out.println("El usuario no existe");
+			}
+		}
 	
 	private static void modifyFuncionario(ManejadorBaseDatos manejador) 
-		throws ClassNotFoundException, SQLException 
-	{
-
-	}
+			throws ClassNotFoundException, SQLException 
+		{
+			System.out.print("Introduce el número del funcionario a modificar: ");
+			int numero = sc.nextInt();
+			sc.nextLine();
+			
+			String sqlSelect = "select * from funcionarios where numero = " +
+					numero;
+			
+			ResultSet rs = manejador.select(sqlSelect);
+			
+			if(rs.isBeforeFirst())
+			{
+				while(rs.next())
+				{
+					LocalDate nacim = rs.getDate("fecha_nacim").toLocalDate();
+					LocalDate ingreso = rs.getDate("fecha_ingreso").toLocalDate();
+					
+					System.out.println("Datos antiguos");
+					System.out.println("Nombre: " + rs.getString("nombres"));
+					System.out.println("Apellidos: " + rs.getString("apellidos"));
+					System.out.println("Dirección: " + rs.getString("direccion"));
+					System.out.println("Teléfono: " + rs.getInt("telefono"));
+					System.out.println("Fecha de nacimiento: " + 
+							nacim.getDayOfMonth() + "/" + nacim.getMonthValue() +
+							"/" + nacim.getYear());
+					System.out.println("Cargo: " + rs.getArray("cargo"));
+					System.out.println("Departamento: " + rs.getString("departamento"));
+					System.out.println("Fecha de ingreso: " + 
+							ingreso.getDayOfMonth() + "/" +
+							ingreso.getMonthValue() +
+							"/" + ingreso.getYear());
+					
+					System.out.println();
+					System.out.println(
+							"Nuevos datos (enter para conservar el dato antiguo)");
+					
+					String sqlModify = "update funcionarios set ";
+					
+					String aux = modifyPersonaAux();
+					String aux2 = modifyFuncionarioAux();
+					
+					if(aux.length() > 0)
+					{
+						sqlModify += aux;
+						if(aux2.length() > 0)
+						{
+							sqlModify += ", " + aux2;
+						}
+						sqlModify += " where numero = " + numero + ";";
+						manejador.update(sqlModify);
+					}
+					else
+					{
+						if(aux2.length() > 0)
+						{
+							sqlModify += aux2;
+							sqlModify += " where numero = " + numero + ";";
+							manejador.update(sqlModify);
+						}
+					}
+				}
+			}
+			else
+			{
+				System.out.println("El usuario no existe");
+			}
+		}
 	
 	private static void showPersonas(ManejadorBaseDatos manejador) 
 		throws SQLException, ClassNotFoundException 
@@ -322,20 +506,62 @@ public class MenuApp {
 	private static List<Persona> menuPersona() throws ParseException{
 		
 		
+		boolean salirNombre = false;
+		String nombre = null;
 		
-		System.out.print("Nombre: ");
-		String nombre = sc.nextLine();
-		System.out.print("Apellido: ");
-		String apellido = sc.nextLine();
+		while(!salirNombre ) {
+			System.out.print("Nombre: ");
+			 nombre = sc.nextLine();
+			
+			if(!nombre.matches("[a-zA-Z].*")) {
+				System.out.println("No puede contener numeros");
+				salirNombre = false;
+			} else {
+				salirNombre = true;
+			}
+		}
+		
+		
+		boolean salirApellido = false;
+		String apellido = null;
+		while(!salirApellido) {
+			System.out.print("Apellido: ");
+			apellido = sc.nextLine();
+			
+			if(!apellido.matches("[a-zA-Z].*")) {
+				System.out.println("No puede contener numeros");
+				salirApellido = false;
+			} else {
+				salirApellido = true;
+			}
+		}
+
 		System.out.print("Direccion: ");
 		String direccion = sc.nextLine();
-		System.out.print("Telefono: ");
-		int telefono = sc.nextInt();
+		
+		boolean salirTelefono = false;
+		String telefonoAux = null;
+		while(!salirTelefono) {
+			System.out.print("telefono: ");
+			telefonoAux = sc.nextLine();
+			
+			if(telefonoAux.matches("[a-zA-Z].*")) {
+				System.out.println("No puede contener letras");
+				salirTelefono = false;
+			} else {
+				salirTelefono = true;
+			}
+		}
+		
+		int telefono = Integer.parseInt(telefonoAux);
+		
 		while(telefono < 100000000 || telefono > 999999999) {
 			
 			System.out.println("Teléfono incorrecto");
 			System.out.print("Teléfono: ");
 			telefono = sc.nextInt();
+			
+			
 		}
 		
 		System.out.print("Día nacimento: ");
@@ -469,11 +695,385 @@ public class MenuApp {
 	
 	private static List<Funcionario> menuFuncionario() throws ParseException{
 		
-		menuCliente();
+		menuPersona();
 		
+		String opcion;
+		String cargo = "";
+		
+		do {
+			
+			System.out.println("Grupo:");
+			System.out.println("1. A1");
+			System.out.println("2. A2");
+			System.out.println("3. C1");
+			System.out.println("4. C2");
+			System.out.println("5. AP");
+			System.out.print("Selecciona el grupo: ");
+			opcion = sc.nextLine();
+			
+			switch(opcion)
+			{
+				case "1": cargo = "A1"; break;
+				case "2": cargo = "A2"; break;
+				case "3": cargo = "C1"; break;
+				case "4": cargo = "C2"; break;
+				case "5": cargo = "AP"; break;
+				default: System.out.println("Grupo incorrecto"); break;
+			}
+		} while(!opcion.equals("1") && !opcion.equals("2") &&
+				!opcion.equals("3") && !opcion.equals("4") &&
+				!opcion.equals("5"));
+		
+		System.out.print("Codigo del cuerpo (5 caracteres): ");
+		String codCuerpo = sc.nextLine();
+		while(codCuerpo.length() != 5)
+		{
+			System.out.println("Codigo incorrecto");
+			System.out.print("Codigo del cuerpo (5 caracteres): ");
+			codCuerpo = sc.nextLine();
+		}
+		
+		System.out.print("Departamento: ");
+		String departamento = sc.nextLine();
+		
+		System.out.print("Día de ingreso: ");
+		int diaIngreso = sc.nextInt();
+		while(diaIngreso < 1 || diaIngreso > 31)
+		{
+			System.out.println("Día incorrecto");
+			System.out.print("Día de ingreso: ");
+			diaIngreso = sc.nextInt();
+		}
+	
+		
+		System.out.print("Mes de ingreso: ");
+		int mesIngreso = sc.nextInt();
+		while(mesIngreso < 1 || mesIngreso > 12)
+		{
+			System.out.println("Mes incorrecto");
+			System.out.print("Mes de ingreso: ");
+			mesIngreso = sc.nextInt();
+		}
+
+		
+		System.out.print("Año de ingreso: ");
+		int anyoIngreso = sc.nextInt();
+		while(anyoIngreso < 1900)
+		{
+			System.out.println("Año incorrecto");
+			System.out.print("Año de ingreso: ");
+			anyoIngreso = sc.nextInt();
+		}
+		sc.nextLine();
+		
+		
+		
+		
+		funcionarios.add(new Funcionario(personas.get(0).getNombre(), personas.get(0).getApellido(),
+				personas.get(0).getDireccion(), personas.get(0).getTelefono(), personas.get(0).getAnyo(),
+				personas.get(0).getMes(), personas.get(0).getDia() , cargo, codCuerpo,
+				departamento, anyoIngreso, mesIngreso, diaIngreso));
 		
 		return funcionarios;
 		
+	}
+	
+	
+	
+	private static String modifyPersonaAux()
+	{
+		String sqlModify = "";
+		String aux = "";
+		boolean isChanged = false;
+		
+		System.out.print("Nombre: ");
+		aux = sc.nextLine();
+		if(!aux.equals(""))
+		{
+			isChanged = true;
+			sqlModify += "nombres = '" + aux + "'";
+			aux = "";
+		}
+		System.out.print("Apellidos: ");
+		aux = sc.nextLine();
+		if(!aux.equals(""))
+		{
+			if(isChanged)
+			{
+				sqlModify += ", ";
+			}
+			
+			isChanged = true;
+			sqlModify += "apellidos = '" + aux + "'";
+			aux = "";
+		}
+		System.out.print("Dirección: ");
+		aux = sc.nextLine();
+		if(!aux.equals(""))
+		{
+			if(isChanged)
+			{
+				sqlModify += ", ";
+			}
+			
+			isChanged = true;
+			sqlModify += "direccion = '" + aux + "'";
+			aux = "";
+		}
+		System.out.print("Teléfono: ");
+		aux = sc.nextLine();
+		if(!aux.equals(""))
+		{
+			int phone = Integer.parseInt(aux);
+			while(phone < 100000000)
+			{
+				System.out.println("Teléfono incorrecto");
+				System.out.print("Teléfono: ");
+				phone = sc.nextInt();
+			}
+
+			if(isChanged)
+			{
+				sqlModify += ", ";
+			}
+			
+			isChanged = true;
+			sqlModify += "telefono = " + aux;
+			aux = "";
+		}
+		System.out.print("Día de nacimiento: ");
+		aux = sc.nextLine();
+		if(!aux.equals(""))
+		{
+			int dia = Integer.parseInt(aux);
+			while(dia < 1 || dia > 31)
+			{
+				System.out.println("Día incorrecto");
+				System.out.print("Día de nacimiento: ");
+				dia = sc.nextInt();
+			}
+			System.out.print("Mes de nacimiento: ");
+			int mes = sc.nextInt();
+			while(mes < 1 || dia > 12)
+			{
+				System.out.println("Mes incorrecto");
+				System.out.print("Mes de nacimiento: ");
+				mes = sc.nextInt();
+			}
+			System.out.print("Año de nacimiento: ");
+			int anyo = sc.nextInt();
+			while(anyo < 1900)
+			{
+				System.out.println("Año incorrecto");
+				System.out.print("Año de nacimiento: ");
+				anyo = sc.nextInt();
+			}
+			sc.nextLine();
+			
+			if(isChanged)
+			{
+				sqlModify += ", ";
+			}
+			
+			isChanged = true;
+			sqlModify += "fecha_nacim = date('" + anyo + "-" + mes +
+					"-" + dia + "')";
+			aux = "";
+		}
+		
+		return sqlModify;
+	}
+	
+	private static String modifyClienteAux()
+	{
+		String sqlModify = "";
+		String aux = "";
+		boolean isChanged = false;
+		
+		System.out.print("Número de cuenta: ");
+		aux = sc.nextLine();
+		
+		if(!aux.equals(""))
+		{
+			while(aux.length() != 20)
+			{
+				System.out.println("Número de cuenta incorrecto");
+				System.out.print("Número de cuenta: ");
+				aux = sc.nextLine();
+			}
+			
+			isChanged = true;
+			sqlModify += "nro_cuenta = '" + aux + "'";
+			
+			if(!checkIBAN(aux))
+			{
+				System.out.println("El número de cuenta no ha sido verificado.");
+				sqlModify += ", estado = 'pendiente'";
+			}
+			else
+			{
+				sqlModify += ", estado = 'activo'";
+			}
+			aux = "";
+		}
+		
+		String opcion;
+		
+		do
+		{
+			System.out.println("Tipo de cliente:");
+			System.out.println("1. Normal");
+			System.out.println("2. Premium");
+			System.out.print("Elige una opción: ");
+			opcion = sc.nextLine();
+			
+			if(opcion.equals("1"))
+			{
+				aux = "normal";
+			}
+			else if(opcion.equals("2"))
+			{
+				aux = "premium";
+			}
+			else if(opcion.equals(""))
+			{
+				aux = "";
+			}
+			else
+			{
+				System.out.println("Opción incorrecta");
+			}
+		} while(!opcion.equals("1") && !opcion.equals("2") && !opcion.equals(""));
+		
+		if(!aux.equals(""))
+		{
+			if(isChanged)
+			{
+				sqlModify += ", ";
+			}
+			
+			isChanged = true;
+			sqlModify += "tipo_cliente = '" + aux + "'";
+		}
+		
+		return sqlModify;
+	}
+	
+	private static String modifyFuncionarioAux()
+	{
+		String sqlModify = "";
+		String aux = "";
+		boolean isChanged = false;
+		
+		String opcion;
+		
+		do
+		{
+			System.out.println("Grupo:");
+			System.out.println("1. A1");
+			System.out.println("2. A2");
+			System.out.println("3. C1");
+			System.out.println("4. C2");
+			System.out.println("5. AP");
+			System.out.print("Selecciona el grupo: ");
+			opcion = sc.nextLine();
+			
+			switch(opcion)
+			{
+				case "1": aux = "A1"; break;
+				case "2": aux = "A2"; break;
+				case "3": aux = "C1"; break;
+				case "4": aux = "C2"; break;
+				case "5": aux = "AP"; break;
+				case "": aux = ""; break;
+				default: System.out.println("Grupo incorrecto"); break;
+			}
+		} while(!opcion.equals("1") && !opcion.equals("2") &&
+				!opcion.equals("3") && !opcion.equals("4") &&
+				!opcion.equals("5") && !opcion.equals(""));
+		
+		if(!aux.equals(""))
+		{
+			isChanged = true;
+			sqlModify += "cargo.grupo = '" + aux + "'";
+		}
+		
+		System.out.print("Codigo del cuerpo (5 caracteres): ");
+		aux = sc.nextLine();
+		if(!aux.equals(""))
+		{
+			while(aux.length() != 5)
+			{
+				System.out.println("Codigo incorrecto");
+				System.out.print("Codigo del cuerpo (5 caracteres): ");
+				aux = sc.nextLine();
+			}
+			
+			if(isChanged)
+			{
+				sqlModify += ", ";
+			}
+			
+			isChanged = true;
+			sqlModify += "cargo.codigo_cuerpo = '" + aux + "'";
+			aux = "";
+		}
+		
+		System.out.print("Departamento: ");
+		aux = sc.nextLine();
+		if(!aux.equals(""))
+		{
+			if(isChanged)
+			{
+				sqlModify += ", ";
+			}
+			
+			isChanged = true;
+			sqlModify += "departamento = '" + aux + "'";
+			aux = "";
+		}
+		
+		System.out.print("Día de ingreso: ");
+		aux = sc.nextLine();
+		if(!aux.equals(""))
+		{
+			int dia = Integer.parseInt(aux);
+			while(dia < 1 || dia > 31)
+			{
+				System.out.println("Día incorrecto");
+				System.out.print("Día de ingreso: ");
+				dia = sc.nextInt();
+			}
+			System.out.print("Mes de ingreso: ");
+			int mes = sc.nextInt();
+			while(mes < 1 || dia > 12)
+			{
+				System.out.println("Mes incorrecto");
+				System.out.print("Mes de ingreso: ");
+				mes = sc.nextInt();
+			}
+			System.out.print("Año de ingreso: ");
+			int anyo = sc.nextInt();
+			while(anyo < 1900)
+			{
+				System.out.println("Año incorrecto");
+				System.out.print("Año de ingreso: ");
+				anyo = sc.nextInt();
+			}
+			sc.nextLine();
+			
+			if(isChanged)
+			{
+				sqlModify += ", ";
+			}
+			
+			isChanged = true;
+			sqlModify += "fecha_ingreso = date('" + anyo + "-" + mes +
+					"-" + dia + "')";
+			aux = "";
+		}
+		
+		return sqlModify;
 	}
 	
 	
