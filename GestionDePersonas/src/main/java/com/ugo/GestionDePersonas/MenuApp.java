@@ -505,42 +505,20 @@ public class MenuApp {
 	
 	private static List<Persona> menuPersona() throws ParseException{
 		
+
+		String nombre = "Nombre";
+		validar(nombre);
 		
-		boolean salirNombre = false;
-		String nombre = null;
-		
-		while(!salirNombre ) {
-			System.out.print("Nombre: ");
-			 nombre = sc.nextLine();
-			
-			if(!nombre.matches("[a-zA-Z].*")) {
-				System.out.println("No puede contener numeros");
-				salirNombre = false;
-			} else {
-				salirNombre = true;
-			}
-		}
+		String apellido = "Apellido";
+		validar(apellido);
 		
 		
-		boolean salirApellido = false;
-		String apellido = null;
-		while(!salirApellido) {
-			System.out.print("Apellido: ");
-			apellido = sc.nextLine();
-			
-			if(!apellido.matches("[a-zA-Z].*")) {
-				System.out.println("No puede contener numeros");
-				salirApellido = false;
-			} else {
-				salirApellido = true;
-			}
-		}
 
 		System.out.print("Direccion: ");
 		String direccion = sc.nextLine();
 		
 		boolean salirTelefono = false;
-		String telefonoAux = null;
+		String telefonoAux = "Telefono";
 		while(!salirTelefono) {
 			System.out.print("telefono: ");
 			telefonoAux = sc.nextLine();
@@ -566,6 +544,7 @@ public class MenuApp {
 		
 		System.out.print("Día nacimento: ");
 		int dia = sc.nextInt();
+		
 		while(dia < 1 || dia > 31) {
 			System.out.println("Día incorrecto");
 			System.out.print("Día: ");
@@ -603,7 +582,7 @@ public class MenuApp {
 		
 		
 		
-		System.out.print("Num cuenta bancaria: ");
+		System.out.println("Num cuenta bancaria: ");
 		String numCuenta = sc.nextLine();
 		
 		
@@ -1076,6 +1055,32 @@ public class MenuApp {
 		return sqlModify;
 	}
 	
+	
+	private static String validar(String valido) {
+		
+		boolean salirValido = false;
+		String validoAux = valido;
+		
+		while(!salirValido) {
+			System.out.print(validoAux + ": ");
+			valido = sc.nextLine();
+			
+			if(!valido.matches("[a-zA-Z].*")) {
+				System.out.println("No puede contener números");
+				salirValido = false;
+			} else {
+				salirValido = true;
+			}
+		}
+		
+		return valido;
+		
+	}
+	
+	
+
+
+
 	
 
 
