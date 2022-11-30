@@ -15,13 +15,19 @@ public class Cliente extends  Persona{
 	
 	
 
-	public Cliente(String nombre, String apellido, String direccion, long telefono, DateTime fechaNacimiento,
+
+
+
+
+	public Cliente(String nombre, String apellido, String direccion, int telefono, int dia, int mes, int anyo,
 			String nroCuenta, String estado, String tipoCliente) {
-		super(nombre, apellido, direccion, telefono, fechaNacimiento);
+		super(nombre, apellido, direccion, telefono, dia, mes, anyo);
 		this.nroCuenta = nroCuenta;
 		this.estado = estado;
 		this.tipoCliente = tipoCliente;
 	}
+
+
 
 
 

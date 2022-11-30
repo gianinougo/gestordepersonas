@@ -198,18 +198,18 @@ public class ManejadorBaseDatos {
 		String pruebaPersonas = "insert into personas " +
 				"(nombres, apellidos, direccion, telefono, fecha_nacim)" +
 				"values " +
-				"('Antonio', 'Martínez Pérez', 'C/ 123', 123456789, DATE('1959-12-21'));";
+				"('Ugo', 'Gianino', 'C/ 123', 123456789, DATE('1923-12-11'))";
 		String pruebaCliente = "insert into clientes " +
 				"(nombres, apellidos, direccion, telefono, fecha_nacim, nro_cuenta, " +
 				"estado, tipo_cliente) values " +
-				"('Jesús', 'Romero Llopis', 'C/ 222', 523456788, DATE('1980-01-29'), " +
-				"'ES121212343243241111', 'pendiente', 'premium');";
+				"('Patricia', 'Querejeta', 'C/ 222', 523456788, DATE('1989-01-19'), " +
+				"'ES121212343243241111', 'pendiente', 'premium')";
 		String pruebaFuncionario = "insert into funcionarios " +
 				"(nombres, apellidos, direccion, telefono, fecha_nacim, " +
 				"cargo, departamento, fecha_ingreso)" +
 				"values " +
-				"('Antonio', 'Martínez Pérez', 'C/ 123', 123456789, DATE('1959-12-21'), " +
-				"('A1', 'A1111'), 'FINANZAS', DATE('2006-09-13'));";
+				"('Pedro', 'Fuentes Ríos', 'C/ 123', 123456789, DATE('1952-11-11'), " +
+				"('A1', 'A1234'), 'FINANZAS', DATE('2006-09-13'))";
 		
 		update(pruebaPersonas);
 		update(pruebaCliente);

@@ -15,9 +15,10 @@ public class Funcionario extends Persona{
 	
 	
 
-	public Funcionario(String nombre, String apellido, String direccion, long telefono, DateTime fechaNacimiento,
+
+	public Funcionario(String nombre, String apellido, String direccion, int telefono, int dia, int mes, int anyo,
 			String cargo, String departamento, LocalDate fechaIngreso) {
-		super(nombre, apellido, direccion, telefono, fechaNacimiento);
+		super(nombre, apellido, direccion, telefono, dia, mes, anyo);
 		this.cargo = cargo;
 		this.departamento = departamento;
 		this.fechaIngreso = fechaIngreso;

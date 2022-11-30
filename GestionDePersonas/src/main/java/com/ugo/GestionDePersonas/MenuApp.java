@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -20,8 +21,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class MenuApp {
 	
-	static List<Persona> persona = new ArrayList<>();
+	static List<Persona> personas = new ArrayList<>();
 	static List<Cliente> cliente = new ArrayList<>();
+	static List<Funcionario> funcionarios = new ArrayList<>();
 	
 	public static Scanner sc = new Scanner(System.in);
 	
@@ -97,27 +99,50 @@ public class MenuApp {
 			throws ClassNotFoundException, SQLException, ParseException 
 		{
 
-			List<Persona> persona = menuPersona();
+			List<Persona> personas = menuPersona();
+			//System.out.println(personas);
 			
-			String sqlInsert = "insert into personas " +
-					"(nombres, apellidos, direccion, telefono, fecha_nacim) " +
-					"values ('" + persona.get(0).getNombre() + "', '" + persona.get(1).getApellido() + "', '" +
-					persona.get(2).getDireccion() + "', " + persona.get(3).getTelefono() + ", date('" + persona.get(4).getFechaNacimiento() + "'));";
+			
+			for (Persona p : personas) {
+				
+				String sqlInsert = "insert into personas " +
+						"(nombres, apellidos, direccion, telefono, fecha_nacim) " +
+						"values ('" + p.getNombre() + "', '" + p.getApellido() + "', '" +
+						p.getDireccion() + "', " + p.getTelefono()
+						+ ", date('" + p.getAnyo() + "-" + p.getMes() + "-" 
+						+ p.getDia() + "'));";
 					
-			manejador.update(sqlInsert);
+				//System.out.println(sqlInsert);
+				manejador.update(sqlInsert);
+			}
 
 		}
 
 	private static void addCliente(ManejadorBaseDatos manejador) 
 		throws ClassNotFoundException, SQLException, ParseException 
 	{
-		List<Cliente> cliente = menuCliente();
+		List<Cliente> clientes = menuCliente();
+		
+		
+		for (Cliente c : clientes) {
+			
+			String sqlInsert = "insert into clientes " +
+					"(nombres, apellidos, direccion, telefono, fecha_nacim, nro_cuenta, " +
+					"estado, tipo_cliente) values ('" +
+					c.getNombre() + "', '" + c.getApellido() + "', '" +
+					c.getDireccion() + "', " + c.getTelefono() + ", date('" +
+					c.getAnyo() + "-" + c.getMes() + "-" + c.getDia() + "'), '" + 
+					c.getNroCuenta()+ "', '" + c.getEstado() + "', '" + c.getTipoCliente() + "');";
+					
+			manejador.update(sqlInsert);
+			
+		}
 	}
 	
 	private static void addFuncionario(ManejadorBaseDatos manejador) 
-		throws ClassNotFoundException, SQLException 
+		throws ClassNotFoundException, SQLException, ParseException 
 	{
-
+		menuFuncionario();
 	}
 	
 	private static void modifyPersona(ManejadorBaseDatos manejador) 
@@ -141,18 +166,155 @@ public class MenuApp {
 	private static void showPersonas(ManejadorBaseDatos manejador) 
 		throws SQLException, ClassNotFoundException 
 	{
-
+		String sqlSelect = "select * from only personas";
+		ResultSet rs = manejador.select(sqlSelect);
+		
+		if(rs.isBeforeFirst())
+		{
+			System.out.println(String.format("%-15s", "Nombre") +
+					String.format("%-20s", "Apellidos") +
+					String.format("%-20s", "Dirección") +
+					String.format("%-11s", "Teléfono") +
+					String.format("%-12s", "Nacimiento") +
+					"Número");
+			for(int i = 0; i < 84; i++)
+				System.out.print("-");
+			System.out.println();
+			while(rs.next())
+			{
+				String nombre = rs.getString("nombres").length() <= 13 ?
+						rs.getString("nombres") :
+							rs.getString("nombres").substring(0, 12);
+				String apellidos = rs.getString("apellidos").length() <= 18 ?
+						rs.getString("apellidos") :
+							rs.getString("apellidos").substring(0, 17);
+				String direccion = rs.getString("direccion").length() <= 18 ?
+						rs.getString("direccion") :
+							rs.getString("direccion").substring(0, 17);
+				LocalDate nacim = rs.getDate("fecha_nacim").toLocalDate();
+				System.out.println(
+						String.format("%-15s", nombre) +
+						String.format("%-20s", apellidos) +
+						String.format("%-20s", direccion) +
+						String.format("%-11s", rs.getInt("telefono")) +
+						String.format("%-12s", nacim.getDayOfMonth() + "/" +
+						nacim.getMonthValue() +
+						"/" + nacim.getYear()) + rs.getInt("numero"));
+			}
+		}
+		else
+		{
+			System.out.println("No hay registros");
+		}
 	}
 	
 	private static void showClientes(ManejadorBaseDatos manejador) 
 		throws ClassNotFoundException, SQLException 
 	{
-
+		String sqlSelect = "select * from clientes";
+		ResultSet rs = manejador.select(sqlSelect);
+		
+		if(rs.isBeforeFirst())
+		{
+			System.out.println(String.format("%-10s", "Nombre") +
+					String.format("%-16s", "Apellidos") +
+					String.format("%-16s", "Dirección") +
+					String.format("%-11s", "Teléfono") +
+					String.format("%-12s", "Nacimiento") +
+					String.format("%-22s", "Número de cuenta") +
+					String.format("%-11s", "Estado") +
+					String.format("%-9s", "Tipo") + "Número");
+			for(int i = 0; i < 113; i++)
+				System.out.print("-");
+			System.out.println();
+			while(rs.next())
+			{
+				String nombre = rs.getString("nombres").length() <= 8 ?
+						rs.getString("nombres") :
+							rs.getString("nombres").substring(0, 7);
+				String apellidos = rs.getString("apellidos").length() <= 14 ?
+						rs.getString("apellidos") :
+							rs.getString("apellidos").substring(0, 13);
+				String direccion = rs.getString("direccion").length() <= 14 ?
+						rs.getString("direccion") :
+							rs.getString("direccion").substring(0, 13);
+				LocalDate nacim = rs.getDate("fecha_nacim").toLocalDate();
+				
+				System.out.println(
+						String.format("%-10s", nombre) +
+						String.format("%-16s", apellidos) +
+						String.format("%-16s", direccion) +
+						String.format("%-11s", rs.getInt("telefono")) +
+						String.format("%-12s", nacim.getDayOfMonth() + "/" +
+						nacim.getMonthValue() +
+						"/" + nacim.getYear()) +
+						String.format("%-22s", rs.getString("nro_cuenta")) +
+						String.format("%-11s", rs.getString("estado")) +
+						String.format("%-9s", rs.getString("tipo_cliente")) +
+						rs.getInt("numero"));
+			}
+		}
+		else
+		{
+			System.out.println("No hay registros");
+		}
 	}
 	
 	private static void showFuncionarios(ManejadorBaseDatos manejador) 
 		throws ClassNotFoundException, SQLException 
 	{
+		String sqlSelect = "select * from funcionarios";
+		ResultSet rs = manejador.select(sqlSelect);
+		
+		if(rs.isBeforeFirst())
+		{
+			System.out.println(String.format("%-15s", "Nombre") +
+					String.format("%-16s", "Apellidos") +
+					String.format("%-16s", "Dirección") +
+					String.format("%-11s", "Teléfono") +
+					String.format("%-12s", "Nacimiento") +
+					String.format("%-12s", "Cargo") +
+					String.format("%-14s", "Departamento") +
+					String.format("%-12s", "Ingreso") + "Número");
+			for(int i = 0; i < 114; i++)
+				System.out.print("-");
+			System.out.println();
+			while(rs.next())
+			{
+				String nombre = rs.getString("nombres").length() <= 13 ?
+						rs.getString("nombres") :
+							rs.getString("nombres").substring(0, 12);
+				String apellidos = rs.getString("apellidos").length() <= 16 ?
+						rs.getString("apellidos") :
+							rs.getString("apellidos").substring(0, 15);
+				String direccion = rs.getString("direccion").length() <= 16 ?
+						rs.getString("direccion") :
+							rs.getString("direccion").substring(0, 15);
+				String departamento = rs.getString("departamento").length() <= 12 ?
+						rs.getString("departamento") :
+							rs.getString("departamento").substring(0, 10);
+				LocalDate nacim = rs.getDate("fecha_nacim").toLocalDate();
+				LocalDate ingreso = rs.getDate("fecha_ingreso").toLocalDate();
+				System.out.println(
+						String.format("%-15s", nombre) +
+						String.format("%-16s", apellidos) +
+						String.format("%-16s", direccion) +
+						String.format("%-11s", rs.getInt("telefono")) +
+						String.format("%-12s", nacim.getDayOfMonth() + "/" +
+								nacim.getMonthValue() +
+								"/" + nacim.getYear()) +
+						String.format("%-12s", rs.getString("cargo")) +
+						String.format("%-14s", departamento) +
+						String.format("%-12s", ingreso.getDayOfMonth() + "/" +
+								ingreso.getMonthValue() +
+								"/" + ingreso.getYear()) +
+						rs.getInt("numero"));
+			}
+		}
+		else
+		{
+			System.out.println("No hay registros");
+		}
 
 	}
 	
@@ -168,12 +330,12 @@ public class MenuApp {
 		System.out.print("Direccion: ");
 		String direccion = sc.nextLine();
 		System.out.print("Telefono: ");
-		long telefono = sc.nextLong();
+		int telefono = sc.nextInt();
 		while(telefono < 100000000 || telefono > 999999999) {
 			
 			System.out.println("Teléfono incorrecto");
 			System.out.print("Teléfono: ");
-			telefono = sc.nextLong();
+			telefono = sc.nextInt();
 		}
 		
 		System.out.print("Día nacimento: ");
@@ -200,16 +362,12 @@ public class MenuApp {
 			anyo = sc.nextInt();
 		}
 		
-		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-		String fecha_nacimiento = Integer.toString(anyo) + "-" + Integer.toString(mes) + "-" + Integer.toString(dia);
 		
-		DateTime dateTime = DateTime.parse(fecha_nacimiento, formatter);
-		
-		persona.add(new Persona(nombre, apellido,
-				direccion, telefono, dateTime));
+		personas.add(new Persona(nombre, apellido,
+				direccion, telefono, dia, mes, anyo));
 		
 		
-		return persona;
+		return personas;
 		
 	}
 	
@@ -217,10 +375,9 @@ public class MenuApp {
 		
 		menuPersona();
 		
-		String tipo = null;
-		tipoCliente(tipo);
 		
-		System.out.print("Num cuenta bancaria");
+		
+		System.out.print("Num cuenta bancaria: ");
 		String numCuenta = sc.nextLine();
 		
 		
@@ -245,8 +402,18 @@ public class MenuApp {
 			
 		}
 		
-		cliente.add(new Cliente(persona.get(0).getNombre(), persona.get(1).getApellido(),
-				persona.get(2).getDireccion(), persona.get(3).getTelefono(), persona.get(4).getFechaNacimiento(), numCuenta , estado, tipo));
+		String tipoCliente = "";
+		tipoCliente(tipoCliente);
+		
+		if(tipoCliente.equals("premium")) {
+			tipoCliente = "premium";
+		} else {
+			tipoCliente = "normal";
+		}
+		
+		cliente.add(new Cliente(personas.get(0).getNombre(), personas.get(0).getApellido(),
+				personas.get(0).getDireccion(), personas.get(0).getTelefono(), personas.get(0).getAnyo(),
+				personas.get(0).getMes(), personas.get(0).getDia() , numCuenta ,estado, tipoCliente));
 		
 		System.out.println(cliente);
 		
@@ -297,6 +464,16 @@ public class MenuApp {
 		} while(!opcion.equals("1") && !opcion.equals("2"));
 		
 		return tipo;
+	}
+	
+	
+	private static List<Funcionario> menuFuncionario() throws ParseException{
+		
+		menuCliente();
+		
+		
+		return funcionarios;
+		
 	}
 	
 	
